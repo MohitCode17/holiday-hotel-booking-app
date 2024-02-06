@@ -1,8 +1,28 @@
 import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+// TypeScript type SignInFormData to represent the data structure of the form.
+export type SignInFormData = {
+  email: string;
+  password: string;
+};
 
 const SignIn = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<SignInFormData>();
+
+  const onSubmit = handleSubmit((data) => {
+    console.log(data);
+  });
+
   return (
-    <form className="flex flex-col gap-5 my-10 sm:mx-auto sm:w-full sm:max-w-sm">
+    <form
+      className="flex flex-col gap-5 my-10 sm:mx-auto sm:w-full sm:max-w-sm"
+      onSubmit={onSubmit}
+    >
       <h2 className="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
         Sign in to your account
       </h2>
@@ -12,7 +32,11 @@ const SignIn = () => {
         <input
           type="email"
           className="border border-gray-500 py-1 px-2 w-full font-normal rounded focus:outline-primarySoft"
+          {...register("email", { required: "This field is required" })}
         />
+        {errors.email && (
+          <span className="text-red-500">{errors.email.message}</span>
+        )}
       </label>
 
       <label className="text-gray-900 text-sm font-bold flex-1">
@@ -20,7 +44,17 @@ const SignIn = () => {
         <input
           type="password"
           className="border border-gray-500 py-1 px-2 w-full font-normal rounded focus:outline-primarySoft"
+          {...register("password", {
+            required: "This field is required",
+            minLength: {
+              value: 6,
+              message: "Password must be 6 or more characters",
+            },
+          })}
         />
+        {errors.password && (
+          <span className="text-red-500">{errors.password.message}</span>
+        )}
       </label>
 
       <button className="bg-primary text-white py-2 px-3 rounded hover:bg-blue-700 focus:outline-none text-lg">
