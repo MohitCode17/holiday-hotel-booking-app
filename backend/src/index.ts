@@ -1,22 +1,26 @@
-import express, { Request, Response } from "express";
+import express from "express";
 import cors from "cors";
 import mongoose from "mongoose"
 import "dotenv/config";
 
-const app = express();
-const port = process.env.PORT || 8000;
+// IMPORTING ROUTES
+import userRoutes from "./routes/user-route";
+import authRoutes from "./routes/auth-route";
 
 // DATABASE CONNECTION
 mongoose.connect(process.env.MONGODB_CONNECTION_URL as string);
+
+const app = express();
+const port = process.env.PORT || 8000;
 
 // MIDDLEWARES
 app.use(express.json());
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
 
-app.get("/api/test", async (req: Request, res: Response) => {
-    res.json({message: "Test api testing"});
-});
+// ROUTES
+app.use("/api/users", userRoutes);
+app.use("/api/auth", authRoutes);
 
 app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}`);
