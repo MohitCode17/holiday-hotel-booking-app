@@ -53,3 +53,15 @@ export const validateToken = async () => {
 
     return await response.json();
 }
+
+// FETCHING LOGOUT API
+export const logout = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
+        method: "POST",
+        credentials: "include"
+    });
+
+    if(!response.ok) {
+        throw new Error("Failed to logout!!");
+    };
+}

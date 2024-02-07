@@ -61,4 +61,19 @@ router.get("/validate-token", verifyToken, async (req:Request, res:Response) => 
     res.status(200).json({userId: req.userId});
 });
 
+// LOGOUT USER API ROUTE
+// path     /api/auth/logout
+
+router.post("/logout", async (req:Request, res:Response) => {
+    try {
+        res.cookie("auth_token", "", {
+            expires: new Date(0),
+        });
+
+        res.status(200).json({message: "Logout Success!"})
+    } catch (error) {
+        res.status(500).json({message: "Something went wrong"});
+    }
+});
+
 export default router;

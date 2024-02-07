@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as apiClient from "../api-client";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 // TypeScript type RegisterFormData to represent the data structure of the form.
@@ -15,6 +15,7 @@ export type RegisterFormData = {
 
 const Register = () => {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const {
     register,
@@ -26,7 +27,8 @@ const Register = () => {
   // useMutation: To handle mutations, which are operations that modify data on the server, such as creating, updating, or deleting records.
 
   const { mutate } = useMutation(apiClient.register, {
-    onSuccess: () => {
+    onSuccess: async () => {
+      await queryClient.invalidateQueries("validateToken");
       toast.success("Registration Successful");
       navigate("/");
     },
