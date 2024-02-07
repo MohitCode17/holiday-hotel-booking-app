@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
+import LogoutButton from "./LogoutButton";
 
 const Header = () => {
-  // Show navlinks only isAuth = true
-  const isAuth = false;
+  const { isLoggedIn } = useAppContext();
 
   return (
     <div className="bg-primary">
@@ -37,7 +38,7 @@ const Header = () => {
               <li>
                 <Link to="/">Home</Link>
               </li>
-              {isAuth && (
+              {isLoggedIn && (
                 <>
                   <li>
                     <Link to="/my-booking">My Booking</Link>
@@ -59,10 +60,7 @@ const Header = () => {
         {/* Navbar for Desktop */}
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1 text-white">
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            {isAuth && (
+            {isLoggedIn && (
               <>
                 <li>
                   <Link to="/my-booking">My Booking</Link>
@@ -75,12 +73,16 @@ const Header = () => {
           </ul>
         </div>
         <div className="navbar-end">
-          <Link
-            to="/sign-in"
-            className="px-3 py-2 bg-white text-primarySoft text-sm font-semibold flex items-center hover:bg-blue-50 rounded-sm"
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <LogoutButton />
+          ) : (
+            <Link
+              to="/sign-in"
+              className="px-3 py-2 bg-white text-primarySoft text-sm font-semibold flex items-center hover:bg-blue-50 rounded-sm"
+            >
+              Sign In
+            </Link>
+          )}
         </div>
       </div>
     </div>

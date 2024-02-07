@@ -39,3 +39,17 @@ export const login = async (formData:SignInFormData) => {
 
     return responseBody;
 };
+
+// FETCHING VALIDATE-TOKEN API
+export const validateToken = async () => {
+    const response = await fetch(`${API_BASE_URL}/api/auth/validate-token`, {
+        method: "GET",
+        credentials: "include"
+    });
+
+    if (!response.ok) {
+        throw new Error("Token is invalid");
+    };
+
+    return await response.json();
+}
