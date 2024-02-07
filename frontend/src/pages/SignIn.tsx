@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
+import * as apiClient from "../api-client";
+import { toast } from "react-toastify";
 
 // TypeScript type SignInFormData to represent the data structure of the form.
 export type SignInFormData = {
@@ -8,14 +11,26 @@ export type SignInFormData = {
 };
 
 const SignIn = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<SignInFormData>();
 
+  const { mutate } = useMutation(apiClient.login, {
+    onSuccess: () => {
+      toast.success("Login Success");
+      navigate("/");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    mutate(data);
   });
 
   return (

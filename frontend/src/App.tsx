@@ -3,6 +3,8 @@ import Layout from "./Layout/Layout";
 import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import AuthLayout from "./Layout/AuthLayout";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = () => {
   return (
@@ -37,6 +39,8 @@ const App = () => {
           />
         </Routes>
       </Router>
+      {/* React Toastify Container */}
+      <ToastContainer />
     </>
   );
 };

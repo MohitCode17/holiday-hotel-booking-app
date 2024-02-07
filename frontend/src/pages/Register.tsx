@@ -1,5 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import * as apiClient from "../api-client";
+import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 
 // TypeScript type RegisterFormData to represent the data structure of the form.
 export type RegisterFormData = {
@@ -11,6 +14,8 @@ export type RegisterFormData = {
 };
 
 const Register = () => {
+  const navigate = useNavigate();
+
   const {
     register,
     watch,
@@ -18,9 +23,21 @@ const Register = () => {
     formState: { errors },
   } = useForm<RegisterFormData>();
 
+  // useMutation: To handle mutations, which are operations that modify data on the server, such as creating, updating, or deleting records.
+
+  const { mutate } = useMutation(apiClient.register, {
+    onSuccess: () => {
+      toast.success("Registration Successful");
+      navigate("/");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
   /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
   const onSubmit = handleSubmit((data) => {
-    console.log(data);
+    mutate(data);
   });
 
   return (
