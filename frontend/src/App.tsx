@@ -1,12 +1,20 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import Layout from "./Layout/Layout";
 import SignIn from "./pages/SignIn";
 import Register from "./pages/Register";
 import AuthLayout from "./Layout/AuthLayout";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import AddHotel from "./pages/AddHotel";
+import { useAppContext } from "./context/AppContext";
 
 const App = () => {
+  const { isLoggedIn } = useAppContext();
   return (
     <>
       <Router>
@@ -37,6 +45,20 @@ const App = () => {
               </AuthLayout>
             }
           />
+
+          {/* Hotels Route */}
+          {isLoggedIn && (
+            <Route
+              path="/add-hotel"
+              element={
+                <Layout>
+                  <AddHotel />
+                </Layout>
+              }
+            />
+          )}
+
+          <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
       </Router>
       {/* React Toastify Container */}
