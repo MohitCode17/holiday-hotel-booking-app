@@ -59,6 +59,21 @@ router.post("/",
     }
 });
 
+// FETCH HOTELS API
+// path     /api/my-hotels
+
+router.get("/", verifyToken, async (req:Request, res:Response) => {
+    try {
+        const hotels = await Hotel.find({ userId: req.userId });
+
+        if(!hotels) return res.status(404).json({message: "No hotel found"});
+
+        res.status(200).json(hotels);
+    } catch (error) {
+        res.status(500).json({message: "Something went wrong"});
+    }
+});
+
 // FUNCTION TO UPLOAD IMAGES TO CLOUDINARY AND GET BACK THE URL
 async function uploadImages (imageFiles: Express.Multer.File[]) {
     const uploadPromises = imageFiles.map(async (image) => {

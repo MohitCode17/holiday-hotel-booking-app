@@ -12,6 +12,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AddHotel from "./pages/AddHotel";
 import { useAppContext } from "./context/AppContext";
+import MyHotels from "./pages/MyHotels";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -57,6 +58,15 @@ const App = () => {
               }
             />
           )}
+
+          <Route
+            path="/my-hotels"
+            element={
+              <Layout>
+                <MyHotels />
+              </Layout>
+            }
+          />
 
           <Route path="*" element={<Navigate to={"/"} />} />
         </Routes>
