@@ -74,6 +74,64 @@ router.get("/", verifyToken, async (req:Request, res:Response) => {
     }
 });
 
+// FETCH SINGLE HOTEL BY ID API
+// path     /api/my-hotels/:id
+
+router.get("/:id", verifyToken, async (req:Request, res:Response) => {
+    try {
+        const id = req.params.id.toString();
+
+        const hotel = await Hotel.findOne({
+            _id: id,
+            userId: req.userId,
+        });
+
+        if(!hotel) return res.status(404).json({message: "Hotel not found"});
+        
+        res.status(200).json(hotel);
+    } catch (error) {
+        res.status(500).json({message: "Something went wrong"});
+    }
+});
+
+// UPDATE MY HOTEL API
+// path     /api/my-hotels/:id
+
+router.put("/:hotelId", verifyToken, upload.array("imageFiles"), async (req:Request, res:Response) => {
+    try {
+        const updatedHotelData:HotelType = req.body;
+        const imageFiles = req.files as Express.Multer.File[];
+
+        updatedHotelData.lastUpdated = new Date();
+
+        const hotel = await Hotel.findOneAndUpdate(
+            {
+                _id: req.params.hotelId,
+                userId: req.userId,
+            }, 
+            updatedHotelData, 
+            {new: true}
+        );
+
+        if(!hotel) return res.status(404).json({message: "Hotel not found"});
+
+        // Upload newly images to cloudinary
+        const updatedImageUrls = await uploadImages(imageFiles);
+
+        // If upload was successful, add the URLs to the new hotel
+        hotel.imageUrls = [
+            ...updatedImageUrls,
+            ...(updatedHotelData.imageUrls || []), // existing images urls whether empty or may be contains some image urls.
+        ];
+
+        await hotel.save();
+        res.status(201).json(hotel);
+    } catch (error) {
+        res.status(500).json({message: "Something went wrong"});        
+    }
+});
+
+
 // FUNCTION TO UPLOAD IMAGES TO CLOUDINARY AND GET BACK THE URL
 async function uploadImages (imageFiles: Express.Multer.File[]) {
     const uploadPromises = imageFiles.map(async (image) => {

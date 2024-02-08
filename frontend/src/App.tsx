@@ -13,6 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AddHotel from "./pages/AddHotel";
 import { useAppContext } from "./context/AppContext";
 import MyHotels from "./pages/MyHotels";
+import EditHotel from "./pages/EditHotel";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -64,6 +65,15 @@ const App = () => {
             element={
               <Layout>
                 <MyHotels />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/edit-hotel/:hotelId"
+            element={
+              <Layout>
+                <EditHotel />
               </Layout>
             }
           />
