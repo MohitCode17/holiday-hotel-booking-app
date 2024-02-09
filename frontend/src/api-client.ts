@@ -1,6 +1,6 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from "./pages/SignIn";
-import { HotelType } from "../../backend/src/shared/types";
+import { HotelSearchResponse, HotelType } from "../../backend/src/shared/types";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -121,6 +121,37 @@ export const updateMyHotel = async (hotelFormData:FormData) => {
 
     if(!response.ok) {
         throw new Error("Failed to update hotel");
+    };
+
+    return response.json();
+};
+
+// =========================================================================================================
+
+// FETCH SEARCH HOTEL API
+
+export type SearchParamsType = {
+    destination?: string;
+    checkIn?: string;
+    checkOut?: string;
+    adultCount?: string;
+    childCount?: string;
+    page?: string;
+};
+
+export const searchHotels = async (searchParams:SearchParamsType): Promise<HotelSearchResponse> => {
+    const queryParams = new URLSearchParams();
+    queryParams.append("destination", searchParams.destination || "");
+    queryParams.append("checkIn", searchParams.checkIn || "");
+    queryParams.append("checkOut", searchParams.checkOut || "");
+    queryParams.append("adultCount", searchParams.adultCount || "");
+    queryParams.append("childCount", searchParams.childCount || "");
+    queryParams.append("page", searchParams.page || "");
+
+    const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams}`);
+
+    if(!response.ok) {
+        throw new Error("Failed to fetch hotels");
     };
 
     return response.json();
