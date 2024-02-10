@@ -137,6 +137,7 @@ export type SearchParamsType = {
     adultCount?: string;
     childCount?: string;
     page?: string;
+    sortOption?:string;
 };
 
 export const searchHotels = async (searchParams:SearchParamsType): Promise<HotelSearchResponse> => {
@@ -147,6 +148,7 @@ export const searchHotels = async (searchParams:SearchParamsType): Promise<Hotel
     queryParams.append("adultCount", searchParams.adultCount || "");
     queryParams.append("childCount", searchParams.childCount || "");
     queryParams.append("page", searchParams.page || "");
+    queryParams.append("sortOption", searchParams.sortOption || "");
 
     const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams}`);
 

@@ -8,6 +8,7 @@ import Pagination from "../components/Pagination";
 const Search = () => {
   const search = useSearchContext();
   const [page, setPage] = useState<number>(1);
+  const [sortOption, setSortOption] = useState<string>("");
 
   // Search Params Object
   const searchParams = {
@@ -17,6 +18,7 @@ const Search = () => {
     adultCount: search.adultCount.toString(),
     childCount: search.childCount.toString(),
     page: page.toString(),
+    sortOption,
   };
 
   // Calling Search API
@@ -44,6 +46,20 @@ const Search = () => {
             {search.destination ? ` in ${search.destination}` : ""}
           </span>
           {/* Sort Option */}
+          <select
+            value={sortOption}
+            onChange={(event) => setSortOption(event.target.value)}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Sort By</option>
+            <option value="starRating">Star Rating</option>
+            <option value="pricePerNightAsc">
+              Price Per Night (low to high)
+            </option>
+            <option value="pricePerNightDesc">
+              Price Per Night (high to low)
+            </option>
+          </select>
         </div>
 
         {/* Hotel Card */}
