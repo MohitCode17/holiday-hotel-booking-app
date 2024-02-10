@@ -1,14 +1,22 @@
 import { useSearchContext } from "../context/SearchContext";
 import * as apiClient from "../api-client";
 import { useQuery } from "react-query";
-import { useState } from "react";
+import React, { useState } from "react";
 import SearchHotelCard from "../components/SearchHotelCard";
 import Pagination from "../components/Pagination";
+import TypeFilter from "../components/TypeFilter";
+import FacilitiesFilter from "../components/FacilitiesFilter";
+import RatingFilter from "../components/RatingFilter";
+import PriceFilter from "../components/PriceFilter";
 
 const Search = () => {
   const search = useSearchContext();
   const [page, setPage] = useState<number>(1);
   const [sortOption, setSortOption] = useState<string>("");
+  const [selectedRating, setSelectedRating] = useState<string[]>([]);
+  const [selectedType, setSelectedType] = useState<string[]>([]);
+  const [selectedFacility, setSelectedFacility] = useState<string[]>([]);
+  const [selectedPrice, setSelectedPrice] = useState<number | undefined>();
 
   // Search Params Object
   const searchParams = {
@@ -18,6 +26,10 @@ const Search = () => {
     adultCount: search.adultCount.toString(),
     childCount: search.childCount.toString(),
     page: page.toString(),
+    stars: selectedRating,
+    types: selectedType,
+    facilities: selectedFacility,
+    maxPrice: selectedPrice?.toString(),
     sortOption,
   };
 
@@ -25,6 +37,45 @@ const Search = () => {
   const { data: hotelData } = useQuery(["searchHotels", searchParams], () =>
     apiClient.searchHotels(searchParams)
   );
+
+  // Handle Star rating change
+  const handleStarRatingChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const starRating = event.target.value;
+
+    setSelectedRating((prevStars) =>
+      event.target.checked
+        ? [...prevStars, starRating]
+        : prevStars.filter((star) => star !== starRating)
+    );
+  };
+
+  // Handle hotel type change
+  const handleHotelTypeChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const hotelType = event.target.value;
+
+    setSelectedType((prevType) =>
+      event.target.checked
+        ? [...prevType, hotelType]
+        : prevType.filter((type) => type !== hotelType)
+    );
+  };
+
+  // Handle hotel facilities change
+  const handleHotelFacilitiesChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const hotelFacility = event.target.value;
+
+    setSelectedFacility((prevFacility) =>
+      event.target.checked
+        ? [...prevFacility, hotelFacility]
+        : prevFacility.filter((facility) => facility !== hotelFacility)
+    );
+  };
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-5">
@@ -35,6 +86,22 @@ const Search = () => {
             Filter by:
           </h3>
           {/* Filter Options */}
+          <RatingFilter
+            selectedRating={selectedRating}
+            onChange={handleStarRatingChange}
+          />
+          <TypeFilter
+            selectedType={selectedType}
+            onChange={handleHotelTypeChange}
+          />
+          <FacilitiesFilter
+            selectedFacility={selectedFacility}
+            onChange={handleHotelFacilitiesChange}
+          />
+          <PriceFilter
+            selectedPrice={selectedPrice}
+            onChange={(value?: number) => setSelectedPrice(value)}
+          />
         </div>
       </div>
 

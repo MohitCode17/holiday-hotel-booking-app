@@ -138,6 +138,10 @@ export type SearchParamsType = {
     childCount?: string;
     page?: string;
     sortOption?:string;
+    stars?:string[];
+    facilities?:string[];
+    types?:string[];
+    maxPrice?:string;
 };
 
 export const searchHotels = async (searchParams:SearchParamsType): Promise<HotelSearchResponse> => {
@@ -149,6 +153,12 @@ export const searchHotels = async (searchParams:SearchParamsType): Promise<Hotel
     queryParams.append("childCount", searchParams.childCount || "");
     queryParams.append("page", searchParams.page || "");
     queryParams.append("sortOption", searchParams.sortOption || "");
+
+    searchParams.stars?.forEach((star) => queryParams.append("stars", star));
+    searchParams.types?.forEach((type) => queryParams.append("types", type));
+    searchParams.facilities?.forEach((facility) => queryParams.append("facilities", facility));
+
+    queryParams.append("maxPrice", searchParams.maxPrice || "");
 
     const response = await fetch(`${API_BASE_URL}/api/hotels/search?${queryParams}`);
 

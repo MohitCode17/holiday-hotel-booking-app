@@ -39,7 +39,7 @@ const SearchHotelCard = ({ hotel }: Props) => {
           <div className="line-clamp-4">{hotel.description}</div>
         </div>
         <div className="grid grid-cols-2 items-end whitespace-nowrap">
-          <div className="flex flex-wrap gap-1 items-center">
+          <div className="flex flex-wrap md:flex-nowrap gap-1 items-center">
             {hotel.facilities.slice(0, 3).map((facility, index) => (
               <span
                 key={index}
