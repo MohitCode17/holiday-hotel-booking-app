@@ -15,6 +15,7 @@ import { useAppContext } from "./context/AppContext";
 import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
 import Search from "./pages/Search";
+import HotelDetails from "./pages/HotelDetails";
 
 const App = () => {
   const { isLoggedIn } = useAppContext();
@@ -84,6 +85,15 @@ const App = () => {
             element={
               <Layout>
                 <EditHotel />
+              </Layout>
+            }
+          />
+
+          <Route
+            path="/detail/:hotelId"
+            element={
+              <Layout>
+                <HotelDetails />
               </Layout>
             }
           />

@@ -105,8 +105,8 @@ const SearchBar = () => {
         />
       </div>
 
-      <div className="w-full lg:max-w-[110px] bg-blue-700 text-center cursor-pointer hover:bg-blue-600 font-semibold p-3 rounded">
-        <button className="text-white">Search</button>
+      <div className="w-full lg:max-w-[110px] bg-blue-700 text-center cursor-pointer hover:bg-blue-600 font-semibold rounded">
+        <button className="text-white w-full p-3">Search</button>
       </div>
     </form>
   );
