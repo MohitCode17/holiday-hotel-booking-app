@@ -2,10 +2,14 @@ import express, { Request, Response } from "express";
 import { HotelSearchResponse } from "../shared/types";
 import Hotel from "../models/hotel-models";
 import { param, validationResult } from "express-validator";
+import { verifyToken } from "../middlewares/verifyToken";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_API_KEY as string);
 
 const router = express.Router();
 
-// PAGINATION, SORT AND FILTER API ROUTE
+// SEARCH, PAGINATION, SORTING AND FILTERING API ROUTE
 // path     /api/hotels/search
 router.get("/search", async (req:Request, res:Response) => {
     try {
@@ -79,6 +83,48 @@ router.get("/:id", [param("id").notEmpty().withMessage("Hotel ID is required")],
         res.status(500).json({message: "Something went wrong"});
     }
 })
+
+// CREATE PAYMENT INTENT TO STRIPE API ROUTE
+// path     /api/hotels/:hotelID/bookings/payment-intent
+router.post("/:hotelId/bookings/payment-intent", verifyToken, async (req:Request, res:Response) => {
+    try {
+        const { numberOfNight } = req.body;
+        const hotelId = req.params.hotelId;
+
+        const hotel = await Hotel.findById(hotelId);
+
+        if(!hotel) {
+            return res.status(404).json({message: "Hotel not found"});
+        };
+
+        // Calculate the total cost of booking
+        const totalCost = hotel.pricePerNight * numberOfNight;
+
+        // Create Payment intent
+        const paymentIntent = await stripe.paymentIntents.create({
+            amount: totalCost,
+            currency: "inr",
+            metadata: {
+                hotelId,
+                userId: req.userId,
+            },
+        });
+
+        if(!paymentIntent.client_secret) {
+            return res.status(500).json({message: "Error creating payment intent"});
+        };
+
+        const response = {
+            paymentIntentId: paymentIntent.id,
+            clientSecret: paymentIntent.client_secret.toString(),
+            totalCost,
+        };
+
+        res.status(200).json(response);
+    } catch (error) {
+        res.status(500).json({message: "Something went wrong"});
+    };
+});
 
 
 const constructSearchQuery = (queryParams: any) => {
