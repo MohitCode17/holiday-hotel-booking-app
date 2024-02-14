@@ -165,15 +165,15 @@ router.post(
           { _id: req.params.hotelId },
           {
             $push: { bookings: newBooking },
-          }
+          },
+          {new: true}
         );
   
         if (!hotel) {
           return res.status(400).json({ message: "hotel not found" });
         }
   
-        await hotel.save();
-        res.status(200).json({message: "Booking Done"});
+        res.status(200).json(hotel);
       } catch (error) {
         console.log(error);
         res.status(500).json({ message: "something went wrong" });
