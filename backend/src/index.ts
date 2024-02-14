@@ -10,6 +10,7 @@ import userRoutes from "./routes/user-route";
 import authRoutes from "./routes/auth-route";
 import myHotelsRoutes from "./routes/myHotels-route";
 import hotelRoutes from "./routes/hotels-route";
+import myBookingsRoute from "./routes/my-bookings-route";
 
 // CLOUDINARY CONFIG
 cloudinary.config({
@@ -38,6 +39,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/my-hotels", myHotelsRoutes);
 app.use("/api/hotels", hotelRoutes);
+app.use("/api/my-bookings", myBookingsRoute);
 
 app.listen(port, () => {
     console.log(`Server running on port http://localhost:${port}`);

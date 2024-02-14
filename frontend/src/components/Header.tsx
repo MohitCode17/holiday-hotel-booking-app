@@ -41,7 +41,7 @@ const Header = () => {
               {isLoggedIn && (
                 <>
                   <li>
-                    <Link to="/my-booking">My Booking</Link>
+                    <Link to="/my-bookings">My Booking</Link>
                   </li>
                   <li>
                     <Link to="/my-hotels">My Hotels</Link>
@@ -63,7 +63,7 @@ const Header = () => {
             {isLoggedIn && (
               <>
                 <li>
-                  <Link to="/my-booking">My Booking</Link>
+                  <Link to="/my-bookings">My Booking</Link>
                 </li>
                 <li>
                   <Link to="/my-hotels">My Hotels</Link>
