@@ -64,6 +64,17 @@ router.get("/search", async (req:Request, res:Response) => {
     }
 });
 
+// FETCH HOTELS BY LASTUPDATED
+// path     /api/hotels
+router.get("/", async (req: Request, res: Response) => {
+  try {
+    const hotels = await Hotel.find().sort("-lastUpdated");
+    res.status(200).json(hotels);
+  } catch (error) {
+    res.status(500).json({message: "Something went wrong"});
+  };
+});
+
 // FETCH SINGLE HOTEL BY ID API ROUTE
 // path     /api/hotels/:id
 router.get("/:id", [param("id").notEmpty().withMessage("Hotel ID is required")], async (req:Request, res:Response) => {
